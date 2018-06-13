@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render ExpenseListItem with an expense 1`] = `
+<div>
+  <NavLink
+    activeClassName="active"
+    ariaCurrent="true"
+    to="/edit/1"
+  >
+    <h3>
+      Gum
+    </h3>
+  </NavLink>
+  <p>
+    195
+  </p>
+  <p>
+    0
+  </p>
+</div>
+`;
