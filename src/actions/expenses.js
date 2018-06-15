@@ -5,7 +5,8 @@ export const addExpense = expense => ({
   expense,
 });
 
-export const startAddExpense = (expenseData = {}) => (dispatch) => {
+export const startAddExpense = (expenseData = {}) => (dispatch, getState) => {
+  const { auth: { uid } } = getState();
   const {
     description = '', note = '', amount = 0, createdAt = 0,
   } = expenseData;
@@ -14,7 +15,7 @@ export const startAddExpense = (expenseData = {}) => (dispatch) => {
     description, note, amount, createdAt,
   };
 
-  return database.ref('expenses').push(expense).then((ref) => {
+  return database.ref(`users/${uid}/expenses`).push(expense).then((ref) => {
     dispatch(addExpense({ id: ref.key, ...expense }));
   });
 };
@@ -24,24 +25,31 @@ export const removeExpense = ({ id }) => ({
   id,
 });
 
-export const startRemoveExpense = ({ id }) => dispatch => database.ref(`expenses/${id}`)
-  .remove()
-  .then(() => dispatch(removeExpense({ id })));
+export const startRemoveExpense = ({ id }) => (dispatch, getState) => {
+  const { uid } = getState().auth;
+  return database.ref(`users/${uid}/expenses/${id}`)
+    .remove()
+    .then(() => dispatch(removeExpense({ id })));
+};
 
 export const editExpense = (id, updates) => ({ type: 'EDIT_EXPENSE', id, updates });
 
-export const startEditExpense = (id, updates) => dispatch => database
-  .ref(`expenses/${id}`)
-  .update({ ...updates })
-  .then(() => dispatch(editExpense(id, updates)));
+export const startEditExpense = (id, updates) => (dispatch, getState) => {
+  const { auth: { uid } } = getState();
+  return database
+    .ref(`users/${uid}/expenses/${id}`)
+    .update({ ...updates })
+    .then(() => dispatch(editExpense(id, updates)));
+};
 
 export const setExpenses = expenses => ({
   type: 'SET_EXPENSES',
   expenses,
 });
 
-export const startSetExpenses = () => dispatch =>
-  database.ref('expenses').once('value', (snap) => {
+export const startSetExpenses = () => (dispatch, getState) => {
+  const { auth: { uid } } = getState();
+  return database.ref(`users/${uid}/expenses`).once('value', (snap) => {
     const expenses = [];
 
     snap.forEach((snapChild) => {
@@ -53,3 +61,4 @@ export const startSetExpenses = () => dispatch =>
 
     dispatch(setExpenses(expenses));
   });
+};
