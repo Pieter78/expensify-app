@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
+import LoginPage from '../components/LoginPage';
 import AddExpensePage from '../components/AddExpensePage';
 import EditExpensePage from '../components/EditExpensePage';
 import ExpenseDashboardPage from '../components/ExpenseDashboardPage';
@@ -13,7 +14,8 @@ const AppRouter = () => (
     <div>
       <Header />
       <Switch>
-        <Route exact path="/" component={ExpenseDashboardPage} />
+        <Route exact path="/" component={LoginPage} />
+        <Route path="/dashboard" component={ExpenseDashboardPage} />
         <Route path="/create" component={AddExpensePage} />
         <Route path="/edit/:id" component={EditExpensePage} />
         <Route path="/help" component={HelpPage} />
