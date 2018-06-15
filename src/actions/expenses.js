@@ -22,3 +22,29 @@ export const startAddExpense = (expenseData = {}) => (dispatch) => {
 export const removeExpense = ({ id }) => ({ type: 'REMOVE_EXPENSE', id });
 
 export const editExpense = (id, updates) => ({ type: 'EDIT_EXPENSE', id, updates });
+
+// SET_EXPENSES
+export const setExpenses = expenses => ({
+  type: 'SET_EXPENSES',
+  expenses,
+});
+
+// export const startSetExpenses;
+export const startSetExpenses = () => dispatch =>
+  database.ref('expenses').once('value', (snap) => {
+    const expenses = [];
+
+    snap.forEach((snapChild) => {
+      expenses.push({
+        id: snapChild.key,
+        ...snapChild.val(),
+      });
+    });
+
+    dispatch(setExpenses(expenses));
+  });
+
+
+  // 1. Fetch all expenses data once
+  // 2. parse that data into an array
+  // 3. Dispatch SET_EXPENSES
