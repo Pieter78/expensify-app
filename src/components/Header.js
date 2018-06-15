@@ -17,8 +17,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(undefined, mapDispatchToProps)(Header);
-
-
-// should call startLogout on button click
-
-// LoginPage - as above
