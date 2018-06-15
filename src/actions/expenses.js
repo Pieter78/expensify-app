@@ -28,21 +28,18 @@ export const startRemoveExpense = ({ id }) => dispatch => database.ref(`expenses
   .remove()
   .then(() => dispatch(removeExpense({ id })));
 
-// 1. call startRemoveExpense (same call signature as removeExpense)
-// 2. Test startRemoveExpense with "should remove expense from firebase"
-// 3. use startRemoveExpense in EditExpensePage instead of removeExpense
-// 4. adjust EditExpensePage test
-
-
 export const editExpense = (id, updates) => ({ type: 'EDIT_EXPENSE', id, updates });
 
-// SET_EXPENSES
+export const startEditExpense = (id, updates) => dispatch => database
+  .ref(`expenses/${id}`)
+  .update({ ...updates })
+  .then(() => dispatch(editExpense(id, updates)));
+
 export const setExpenses = expenses => ({
   type: 'SET_EXPENSES',
   expenses,
 });
 
-// export const startSetExpenses;
 export const startSetExpenses = () => dispatch =>
   database.ref('expenses').once('value', (snap) => {
     const expenses = [];
@@ -56,8 +53,3 @@ export const startSetExpenses = () => dispatch =>
 
     dispatch(setExpenses(expenses));
   });
-
-
-  // 1. Fetch all expenses data once
-  // 2. parse that data into an array
-  // 3. Dispatch SET_EXPENSES
